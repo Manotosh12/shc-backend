@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SoilReport } from '../entities/soil-report.entity';
-import { CreateSoilReportDto } from '../dtos/create-soil-report.dto';
+import { SoilReport } from '../entities/soil-report-blockwise.entity';
+import { CreateSoilReportDto } from '../dtos/create-soil-report-blockwise.dto';
 
 @Injectable()
 export class SoilReportService {
