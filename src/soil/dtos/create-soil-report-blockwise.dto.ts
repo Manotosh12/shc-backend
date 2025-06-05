@@ -1,14 +1,13 @@
 import { IsString, IsObject, IsDateString } from 'class-validator';
 
-export class CreateSoilReportDto {
+export class CreateSoilReportBlockwiseDto {
   @IsString()
   state_name: string;
 
   @IsString()
   district_name: string;
 
-  @IsString()
-  village_name: string;
+  
 
   @IsObject()
   n: Record<string, number>;
