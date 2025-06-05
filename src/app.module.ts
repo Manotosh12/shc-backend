@@ -10,15 +10,16 @@ import { DistrictModule } from './district/district.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT ?? '5432'),
+      port: parseInt(process.env.DB_PORT ?? '5432'), // Default to 5432 if DB_PORT is undefined
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       autoLoadEntities: true,
-      synchronize: true, 
+      synchronize: true, // Set false in production(At the time of deployment)
+      
     }),
-    
-    DistrictModule   
+    DistrictModule  
   ],
 })
 export class AppModule {}
+
