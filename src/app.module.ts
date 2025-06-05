@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { BlockModule } from './soil/modules/block.module';
-import { SoilReportModule } from './soil/modules/soil-report.module';
+import { SoilReportBlockwiseModule } from './soil/modules/soil-report-blockwise.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { SoilReportModule } from './soil/modules/soil-report.module';
       synchronize: true, // Set false in production(At the time of deployment)
       migrations: [__dirname + '/migrations/*{.ts,.js}'], // where migration files live
     }),
-    BlockModule,SoilReportModule,
+    BlockModule,SoilReportBlockwiseModule,
   ],
 })
 export class AppModule {}
