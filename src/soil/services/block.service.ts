@@ -17,7 +17,8 @@ export class BlockService {
   }
 
   async findOne(id: string): Promise<Block> {
-    const block = await this.blockRepository.findOne({ where: { id } });
+    const blockId = Number(id);
+    const block = await this.blockRepository.findOne({ where: { id: blockId } });
     if (!block) throw new NotFoundException('Block not found');
     return block;
   }

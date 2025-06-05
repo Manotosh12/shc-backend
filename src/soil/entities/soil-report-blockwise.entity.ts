@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('soil_reports_blockwise')
-export class SoilReport {
+@Entity('soil_report_blockwise')
+export class SoilReportBlockwise {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: number;
 
   @Column()
   state_name: string;
