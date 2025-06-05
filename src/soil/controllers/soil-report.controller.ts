@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { SoilReportService } from '../services/soil-report.service';
-import { CreateSoilReportDto } from '../dtos/create-soil-report.dto';
+import { CreateSoilReportDto } from '../dtos/create-soil-report-blockwise.dto';
 
 @Controller('soil-reports')
 export class SoilReportController {

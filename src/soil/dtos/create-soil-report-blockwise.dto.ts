@@ -10,9 +10,6 @@ export class CreateSoilReportDto {
   @IsString()
   village_name: string;
 
-  @IsDateString()
-  timestamp: string;
-
   @IsObject()
   n: Record<string, number>;
 
@@ -27,4 +24,7 @@ export class CreateSoilReportDto {
 
   @IsObject()
   pH: Record<string, number>;
+
+  @IsDateString()
+  timestamp: string;
 }
