@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { BlockModule } from './soil/modules/block.module';
 import { SoilReportBlockwiseModule } from './soil/modules/soil-report-blockwise.module';
 import { StateModule } from './soil/modules/state.module';
+import { DistrictModule } from './soil/modules/district.module';
 
 
 @Module({
@@ -26,6 +27,7 @@ import { StateModule } from './soil/modules/state.module';
     BlockModule,
     SoilReportBlockwiseModule,
     StateModule, 
+    DistrictModule
   ],
 })
 export class AppModule {}
