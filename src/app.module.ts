@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { SoilModule } from './soil/soil.module';
+import { BlockModule } from './soil/modules/block.module';
+import { SoilReportModule } from './soil/modules/soil-report.module';
 
 @Module({
   imports: [
@@ -15,8 +16,9 @@ import { SoilModule } from './soil/soil.module';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: true, // Set false in production(At the time of deployment)
+      migrations: [__dirname + '/migrations/*{.ts,.js}'], // where migration files live
     }),
-    SoilModule,
+    BlockModule,SoilReportModule,
   ],
 })
 export class AppModule {}
