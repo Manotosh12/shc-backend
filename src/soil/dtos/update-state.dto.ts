@@ -4,5 +4,5 @@ export class UpdateStateDto {
   @IsOptional()
   @IsString()
   @MinLength(2)
-  stateName?: string;
+  state_name?: string;
 }

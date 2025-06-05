@@ -19,7 +19,7 @@ export class StateService {
 
   async findById(id: number): Promise<State> {
     const state = await this.stateRepository.findOne({
-      where: { stateId: id },
+      where: { state_id: id },
       relations: ['districts', 'districts.soils'],
     });
     if (!state) throw new NotFoundException(`State with id ${id} not found`);

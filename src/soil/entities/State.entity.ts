@@ -4,10 +4,10 @@ import { SoilReportBlockwise } from './soil-report-blockwise.entity';
 @Entity()
 export class State {
   @PrimaryGeneratedColumn()
-  stateId: number;
+  state_id: number;
 
   @Column()
-  stateName: string;
+  state_name: string;
   
   @OneToMany(() => SoilReportBlockwise, soil => SoilReportBlockwise)
   soilReports: SoilReportBlockwise[];
