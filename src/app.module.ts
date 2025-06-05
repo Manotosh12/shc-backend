@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { SoilModule } from './soil/soil.module';
+
 import { DistrictModule } from './district/district.module';
 
 @Module({
@@ -17,7 +17,7 @@ import { DistrictModule } from './district/district.module';
       autoLoadEntities: true,
       synchronize: true, 
     }),
-    SoilModule,
+    
     DistrictModule   
   ],
 })
