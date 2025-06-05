@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { District } from '../district/district.entity';
+import { District } from './district/district.entity';
 
 @Entity()
 export class State {

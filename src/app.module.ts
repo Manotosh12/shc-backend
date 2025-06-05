@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { SoilModule } from './soil/soil.module';
 import { StateModule } from './state.module';  
+import { DistrictModule } from './district/district.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { StateModule } from './state.module';
       synchronize: true, 
     }),
     SoilModule,
-    StateModule,   
+    StateModule,
+    DistrictModule   
   ],
 })
 export class AppModule {}
