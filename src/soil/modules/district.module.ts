@@ -8,5 +8,6 @@ import { DistrictController } from '../controllers/district.controller';
   imports: [TypeOrmModule.forFeature([District])],
   providers: [DistrictService],
   controllers: [DistrictController],
+  exports:[DistrictService]
 })
 export class DistrictModule {}
