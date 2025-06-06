@@ -31,5 +31,6 @@ export class SoilReportBlockwise {
 
   @Column({ type: 'timestamp' })
   timestamp: Date;
+  state: any;
 }
 

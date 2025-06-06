@@ -7,4 +7,5 @@ export class District {
 
   @Column()
   district_name: string;
+  state: any;
 }
