@@ -1,12 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Block } from './block.entity';
 
 @Entity('soil_report_blockwise')
 export class SoilReportBlockwise {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  blockwise_report_id: string;
 
-  
-  state: any;
   @Column('jsonb')
   n: Record<string, number>;
 
@@ -24,5 +23,8 @@ export class SoilReportBlockwise {
 
   @Column({ type: 'timestamp' })
   timestamp: Date;
+
+  @ManyToOne(() => Block, block => block.soilReports, { onDelete: 'CASCADE' })
+  block: Block;
 }
 
