@@ -1,7 +1,11 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+// src/soil/dto/create-district.dto.ts
+import { IsString, IsUUID } from 'class-validator';
 
 export class CreateDistrictDto {
   @IsString()
-  @IsNotEmpty()
   district_name: string;
+
+  @IsUUID()
+  state_id: string;
 }
+

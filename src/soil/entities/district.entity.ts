@@ -22,4 +22,7 @@ export class District {
 
   @ManyToOne(() => State, state => state.districts, { onDelete: 'CASCADE' })
   state: State;
+
+  @OneToMany(() => Block, (block) => block.district, { cascade: true })
+  blocks: Block[]; 
 }

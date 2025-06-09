@@ -1,35 +1,37 @@
-import { Controller, Get, Post, Param, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Patch, Delete } from '@nestjs/common';
 import { BlockService } from '../services/block.service';
-import { CreateBlockDto } from '../dtos/create-block.dto';
-import { UpdateBlockDto } from '../dtos/update-block.dto';
 
 
 @Controller('blocks')
 export class BlockController {
   constructor(private readonly blockService: BlockService) {}
 
+  @Post()
+  create(@Body() body: { block_name: string; district_id: string }) {
+    return this.blockService.createBlock(body);
+  }
+
   @Get()
   findAll() {
-    return this.blockService.findAll();
+    return this.blockService.findAllBlocks();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.blockService.findOne(id);
+    return this.blockService.findOneBlock(id);
   }
 
-  @Post()
-  create(@Body() dto: CreateBlockDto) {
-    return this.blockService.create(dto);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateBlockDto) {
-    return this.blockService.update(id, dto);
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() body: { block_name?: string; district_id?: string }
+  ) {
+    return this.blockService.updateBlock(id, body);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.blockService.remove(id);
+    return this.blockService.deleteBlock(id);
   }
 }
+

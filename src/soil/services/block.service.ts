@@ -2,40 +2,65 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Block } from '../entities/block.entity';
-import { CreateBlockDto } from '../dtos/create-block.dto';
-import { UpdateBlockDto } from '../dtos/update-block.dto';
+import { District } from '../entities/district.entity';
 
 @Injectable()
 export class BlockService {
   constructor(
     @InjectRepository(Block)
-    private readonly blockRepository: Repository<Block>,
+    private blockRepository: Repository<Block>,
+
+    @InjectRepository(District)
+    private districtRepository: Repository<District>
   ) {}
 
-  async findAll(): Promise<Block[]> {
-    return this.blockRepository.find();
+  async createBlock(data: { block_name: string; district_id: string }): Promise<Block> {
+    const district = await this.districtRepository.findOne({
+      where: { district_id: data.district_id },
+    });
+
+    if (!district) {
+      throw new NotFoundException('District not found');
+    }
+
+    const block = this.blockRepository.create({
+      block_name: data.block_name,
+      district,
+    });
+
+    return this.blockRepository.save(block);
   }
 
-  async findOne(id: string): Promise<Block> {
-    const blockId = Number(id);
-    const block = await this.blockRepository.findOne({ where: { id: blockId } });
+  async findAllBlocks(): Promise<Block[]> {
+    return this.blockRepository.find({ relations: ['district'] });
+  }
+
+  async findOneBlock(id: string): Promise<Block> {
+    const block = await this.blockRepository.findOne({
+      where: { block_id: id },
+      relations: ['district'],
+    });
     if (!block) throw new NotFoundException('Block not found');
     return block;
   }
 
-  async create(createBlockDto: CreateBlockDto): Promise<Block> {
-    const block = this.blockRepository.create(createBlockDto);
+  async updateBlock(id: string, data: { block_name?: string; district_id?: string }): Promise<Block> {
+    const block = await this.findOneBlock(id);
+
+    if (data.block_name) block.block_name = data.block_name;
+    if (data.district_id) {
+      const district = await this.districtRepository.findOne({
+        where: { district_id: data.district_id },
+      });
+      if (!district) throw new NotFoundException('District not found');
+      block.district = district;
+    }
+
     return this.blockRepository.save(block);
   }
 
-  async update(id: string, updateBlockDto: UpdateBlockDto): Promise<Block> {
-    await this.findOne(id); // ensure it exists
-    await this.blockRepository.update(id, updateBlockDto);
-    return this.findOne(id);
-  }
-
-  async remove(id: string): Promise<void> {
-    await this.findOne(id); // ensure it exists
-    await this.blockRepository.delete(id);
+  async deleteBlock(id: string): Promise<void> {
+    const block = await this.findOneBlock(id);
+    await this.blockRepository.remove(block);
   }
 }
