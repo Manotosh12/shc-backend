@@ -1,44 +1,56 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { District } from '../entities/district.entity';
-import { CreateDistrictDto } from '../dtos/create-district.dto';
-import { UpdateDistrictDto } from '../dtos/update-district.dto';
+import { StateService } from './state.service';
 
 @Injectable()
 export class DistrictService {
   constructor(
-    @InjectRepository(District)
-    private readonly districtRepository: Repository<District>,
-  ) {}
+  @InjectRepository(District)
+  private districtRepository: Repository<District>,
 
-  async create(dto: CreateDistrictDto): Promise<District> {
-    const district = this.districtRepository.create(dto);
+  @Inject(forwardRef(() => StateService)) // ✅ Use forwardRef here
+  private stateService: StateService,
+) {}
+
+  async createDistrict(data: { district_name: string; state_id: string }): Promise<District> {
+    const state = await this.stateService.findOneState(data.state_id);
+    const district = this.districtRepository.create({
+      district_name: data.district_name,
+      state,
+    });
     return this.districtRepository.save(district);
   }
 
-  async findAll(): Promise<District[]> {
-    return this.districtRepository.find();
+  async findAllDistricts(): Promise<District[]> {
+    return this.districtRepository.find({ relations: ['state'] });
   }
 
-  async findOne(id: string): Promise<District> {
-    const district = await this.districtRepository.findOne({ where: { district_id: id } });
+  async findOneDistrict(id: string): Promise<District> {
+    const district = await this.districtRepository.findOne({
+      where: { district_id: id },
+      relations: ['state'],
+    });
     if (!district) {
       throw new NotFoundException(`District with ID ${id} not found`);
     }
     return district;
   }
 
-  async update(id: string, dto: UpdateDistrictDto): Promise<District> {
-    const district = await this.findOne(id);
-    Object.assign(district, dto);
+  async updateDistrict(id: string, data: { district_name?: string; state_id?: string }): Promise<District> {
+    const district = await this.findOneDistrict(id);
+    if (data.district_name) district.district_name = data.district_name;
+    if (data.state_id) {
+      const state = await this.stateService.findOneState(data.state_id);
+      district.state = state;
+    }
     return this.districtRepository.save(district);
   }
 
-  async remove(id: string): Promise<void> {
-    const result = await this.districtRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`District with ID ${id} not found`);
-    }
+  async deleteDistrict(id: string): Promise<void> {
+    const district = await this.findOneDistrict(id);
+    await this.districtRepository.remove(district);
   }
 }
+
