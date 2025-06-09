@@ -7,4 +7,5 @@ export class Block {
 
   @Column({ type: 'varchar', length: 100 })
   block_name: string;
+  district: any;
 }

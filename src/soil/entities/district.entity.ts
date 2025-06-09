@@ -20,13 +20,6 @@ export class District {
   @Column()
   district_name: string;
 
-  @ManyToOne(() => State, (state) => state.districts, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'state_id' }) 
+  @ManyToOne(() => State, state => state.districts, { onDelete: 'CASCADE' })
   state: State;
-
-  @OneToMany(() => Block, (block) => block.district)
-  blocks: Block[];
-  
-  @OneToMany(() => SoilReportBlockwise, soil => soil.state)
-    soilReports: SoilReportBlockwise[];
 }

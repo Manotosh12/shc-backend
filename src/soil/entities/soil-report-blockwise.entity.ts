@@ -5,15 +5,8 @@ export class SoilReportBlockwise {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
-  state_name: string;
-
-  @Column()
-  district_name: string;
-
-  @Column()
-  block_name: string;
-
+  
+  state: any;
   @Column('jsonb')
   n: Record<string, number>;
 
@@ -31,6 +24,5 @@ export class SoilReportBlockwise {
 
   @Column({ type: 'timestamp' })
   timestamp: Date;
-  state: any;
 }
 

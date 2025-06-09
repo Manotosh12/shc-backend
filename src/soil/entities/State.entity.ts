@@ -10,9 +10,7 @@ export class State {
   @Column()
   state_name: string;
   
-  @OneToMany(() => District, district => district.state)
+  @OneToMany(() => District, district => district.state, { cascade: true })
   districts: District[];
-
-  @OneToMany(() => SoilReportBlockwise, soil => soil.state)
-  soilReports: SoilReportBlockwise[];
+  
 }
