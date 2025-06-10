@@ -1,5 +1,3 @@
-
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -11,6 +9,7 @@ import {
 import { State } from './State.entity';
 import { Block } from './block.entity';
 import { SoilReportBlockwise } from './soil-report-blockwise.entity';
+import { SoilReportDistrictwise } from './soil-report-districtwise.entity';
 
 @Entity()
 export class District {
@@ -24,5 +23,8 @@ export class District {
   state: State;
 
   @OneToMany(() => Block, (block) => block.district, { cascade: true })
-  blocks: Block[]; 
+  blocks: Block[];
+
+  @OneToMany(() => SoilReportDistrictwise, soilReport => soilReport.district, { cascade: true })
+  soilReports: SoilReportDistrictwise[];
 }

@@ -6,7 +6,7 @@ import { BlockModule } from './soil/modules/block.module';
 import { SoilReportBlockwiseModule } from './soil/modules/soil-report-blockwise.module';
 import { StateModule } from './soil/modules/state.module';
 import { DistrictModule } from './soil/modules/district.module';
-
+import { SoilReportDistrictwiseModule } from './soil/modules/soil-report-districtwise.module';
 
 @Module({
   imports: [
@@ -23,11 +23,11 @@ import { DistrictModule } from './soil/modules/district.module';
       migrations: [__dirname + '/migrations/*{.ts,.js}'],
     }),
 
-    
     BlockModule,
     SoilReportBlockwiseModule,
     StateModule, 
-    DistrictModule
+    DistrictModule,
+    SoilReportDistrictwiseModule
   ],
 })
 export class AppModule {}
