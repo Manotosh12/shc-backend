@@ -8,6 +8,7 @@ import {
   Patch,
   Delete,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { DistrictService } from '../services/district.service';
 import { CreateDistrictDto } from '../dtos/create-district.dto';
@@ -23,7 +24,10 @@ export class DistrictController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Query('stateId') stateId?: string) {
+    if (stateId) {
+      return this.districtService.findDistrictsByState(stateId);
+    }
     return this.districtService.findAllDistricts();
   }
 

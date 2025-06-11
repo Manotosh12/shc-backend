@@ -83,6 +83,20 @@ export class DistrictService {
     const district = await this.findOneDistrict(id);
     await this.districtRepository.remove(district);
   }
+
+  async findDistrictsByState(stateId: string): Promise<District[]> {
+    const districts = await this.districtRepository.find({
+      where: { state: { state_id: stateId } },
+      relations: ['state', 'blocks'],
+      order: { district_name: 'ASC' }
+    });
+
+    if (!districts.length) {
+      throw new NotFoundException(`No districts found for state ID ${stateId}`);
+    }
+
+    return districts;
+  }
 }
 
 
