@@ -8,6 +8,7 @@ import {
   Patch,
   Delete,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { SoilReportBlockwiseService } from '../services/soil-report-blockwise.service';
 import { CreateSoilReportBlockwiseDto } from '../dtos/create-soil-report-blockwise.dto';
@@ -26,9 +27,15 @@ export class SoilReportBlockwiseController {
   }
 
   @Get()
-  findAll() {
-    return this.service.findAll();
-  }
+    findAll(@Query('districtId') districtId?: string, @Query('blockId') blockId?: string) {
+      if (districtId) {
+        return this.service.findByDistrict(districtId);
+      }
+      if (blockId) {
+        return this.service.findByBlock(blockId);
+      }
+      return this.service.findAll();
+    }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -51,6 +58,11 @@ export class SoilReportBlockwiseController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.service.delete(id);
+  }
+
+  @Get('district/:districtId/blocks')
+  getStateWiseDistrictData(@Param('districtId') districtId: string) {
+    return this.service.getDistrictWiseBlockData(districtId);
   }
 }
 
