@@ -74,10 +74,10 @@ export class SoilReportDistrictwiseService {
   }
 
   async getStateWiseDistrictData(stateId: string) {
-    // First get all districts in the state
+    // Get districts without soil reports
     const districts = await this.districtRepository.find({
       where: { state: { state_id: stateId } },
-      relations: ['state', 'soilReports'],
+      relations: ['state'],
       order: { district_name: 'ASC' }
     });
 
@@ -85,23 +85,33 @@ export class SoilReportDistrictwiseService {
       throw new NotFoundException(`No districts found for state ID ${stateId}`);
     }
 
-    // Format the response to include district-wise soil data
-    return districts.map(district => ({
-      district_id: district.district_id,
-      district_name: district.district_name,
-      state: {
-        state_id: district.state.state_id,
-        state_name: district.state.state_name
-      },
-      soil_reports: district.soilReports.map(report => ({
-        report_id: report.districtwise_report_id,
-        n: report.n,
-        p: report.p,
-        k: report.k,
-        OC: report.OC,
-        pH: report.pH,
-        timestamp: report.timestamp
-      }))
-    }));
+    // Get soil reports for each district separately
+    const districtsWithReports = await Promise.all(
+      districts.map(async district => {
+        const reports = await this.reportRepository.find({
+          where: { district: { district_id: district.district_id } }
+        });
+
+        return {
+          district_id: district.district_id,
+          district_name: district.district_name,
+          state: {
+            state_id: district.state.state_id,
+            state_name: district.state.state_name
+          },
+          soil_reports: reports.map(report => ({
+            report_id: report.districtwise_report_id,
+            n: report.n,
+            p: report.p,
+            k: report.k,
+            OC: report.OC,
+            pH: report.pH,
+            timestamp: report.timestamp
+          }))
+        };
+      })
+    );
+
+    return districtsWithReports;
   }
 }
