@@ -33,14 +33,14 @@ export class DistrictService {
 
   async findAllDistricts(): Promise<District[]> {
     return this.districtRepository.find({
-      relations: ['state', 'blocks', 'blocks.soilReports'],
+      relations: ['state', 'blocks'],
     });
   }
 
   async findOneDistrict(id: string): Promise<District> {
     const district = await this.districtRepository.findOne({
       where: { district_id: id },
-      relations: ['state', 'blocks', 'blocks.soilReports'],
+      relations: ['state', 'blocks'],
     });
 
     if (!district) {
