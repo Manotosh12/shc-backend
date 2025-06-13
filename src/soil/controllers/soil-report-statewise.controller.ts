@@ -23,6 +23,11 @@ export class SoilReportStatewiseController {
         return this.service.findAll();
     }
 
+    @Get('state/:stateId')
+    findByState(@Param('stateId') stateId: string) {
+        return this.service.findByState(stateId);
+    }
+
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.service.findOne(id);
