@@ -31,6 +31,14 @@ export class BlockService {
     return this.blockRepository.save(block);
   }
 
+  async findBlocksByDistrict(districtId: string) {
+    return this.blockRepository.find({
+      where: { district: { district_id: districtId } },
+      relations: ['district'],
+      order: { block_name: 'ASC' }
+    });
+  }
+  
   async findAllBlocks(): Promise<Block[]> {
     return this.blockRepository.find({ relations: ['district'] });
   }

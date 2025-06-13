@@ -31,6 +31,11 @@ export class DistrictController {
     return this.districtService.findAllDistricts();
   }
 
+  @Get('state/:stateId')
+  findByState(@Param('stateId') stateId: string) {
+    return this.districtService.findDistrictsByState(stateId);
+  }
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.districtService.findOneDistrict(id);

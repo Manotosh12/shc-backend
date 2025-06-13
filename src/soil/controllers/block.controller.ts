@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Body, Patch, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Patch, Delete, Query } from '@nestjs/common';
 import { BlockService } from '../services/block.service';
 
 
@@ -12,8 +12,16 @@ export class BlockController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Query('districtId') districtId?: string) {
+    if (districtId) {
+      return this.blockService.findBlocksByDistrict(districtId);
+    }
     return this.blockService.findAllBlocks();
+  }
+
+  @Get('district/:districtId')
+  getBlocksByDistrict(@Param('districtId') districtId: string) {
+    return this.blockService.findBlocksByDistrict(districtId);
   }
 
   @Get(':id')

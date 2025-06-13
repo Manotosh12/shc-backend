@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { SoilReportBlockwise } from './soil-report-blockwise.entity';
 import { District } from './district.entity';
+import { SoilReportStatewise } from './soil-report-statewise';
 
 @Entity()
 export class State {
@@ -13,4 +14,6 @@ export class State {
   @OneToMany(() => District, district => district.state, { cascade: true })
   districts: District[];
   
+  @OneToMany(() => SoilReportStatewise, soilReport => soilReport.state, {cascade: true} )
+  soilReports : SoilReportStatewise[];
 }
