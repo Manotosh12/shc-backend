@@ -7,6 +7,7 @@ import { SoilReportBlockwiseModule } from './soil/modules/soil-report-blockwise.
 import { StateModule } from './soil/modules/state.module';
 import { DistrictModule } from './soil/modules/district.module';
 import { SoilReportDistrictwiseModule } from './soil/modules/soil-report-districtwise.module';
+import { SoilReportStatetwiseModule } from './soil/modules/soil-report-statewise.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { SoilReportDistrictwiseModule } from './soil/modules/soil-report-distric
     SoilReportBlockwiseModule,
     StateModule, 
     DistrictModule,
-    SoilReportDistrictwiseModule
+    SoilReportDistrictwiseModule,
+    SoilReportStatetwiseModule
   ],
 })
 export class AppModule {}

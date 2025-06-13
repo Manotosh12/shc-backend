@@ -60,7 +60,7 @@ export class SoilReportBlockwiseController {
     return this.service.delete(id);
   }
 
-  @Get('district/:districtId/blocks')
+  @Get('district/:districtId')
   getStateWiseDistrictData(@Param('districtId') districtId: string) {
     return this.service.getDistrictWiseBlockData(districtId);
   }

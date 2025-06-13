@@ -19,6 +19,11 @@ export class BlockController {
     return this.blockService.findAllBlocks();
   }
 
+  @Get('district/:districtId')
+  getBlocksByDistrict(@Param('districtId') districtId: string) {
+    return this.blockService.findBlocksByDistrict(districtId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.blockService.findOneBlock(id);

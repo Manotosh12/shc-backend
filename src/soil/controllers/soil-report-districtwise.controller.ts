@@ -57,7 +57,7 @@ export class SoilReportDistrictwiseController {
     return this.service.delete(id);
   }
 
-  @Get('state/:stateId/districts')
+  @Get('state/:stateId')
   getStateWiseDistrictData(@Param('stateId') stateId: string) {
     return this.service.getStateWiseDistrictData(stateId);
   }
