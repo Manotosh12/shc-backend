@@ -64,5 +64,11 @@ export class SoilReportBlockwiseController {
   getStateWiseDistrictData(@Param('districtId') districtId: string) {
     return this.service.getDistrictWiseBlockData(districtId);
   }
+
+  @Get('block/:blockId')
+  getBlockWiseReport(@Param('blockId') blockId: string) {
+    return this.service.getBlockWiseReport(blockId);
+  }
+  
 }
 
