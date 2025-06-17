@@ -61,4 +61,9 @@ export class SoilReportDistrictwiseController {
   getStateWiseDistrictData(@Param('stateId') stateId: string) {
     return this.service.getStateWiseDistrictData(stateId);
   }
+
+  @Get('district/:districtId')
+  getDistrictWiseReport(@Param('districtId') districtId: string) {
+    return this.service.getDistrictWiseReport(districtId);
+  }
 }

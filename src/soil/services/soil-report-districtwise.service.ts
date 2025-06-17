@@ -114,4 +114,12 @@ export class SoilReportDistrictwiseService {
 
     return districtsWithReports;
   }
+
+  async getDistrictWiseReport(districtId: string) {
+    return this.reportRepository.find({
+      where: { district: { district_id: districtId } },
+      relations: ['district', 'district.state'],
+      order: { timestamp: 'DESC' }
+    });
+  }
 }

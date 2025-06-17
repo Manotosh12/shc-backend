@@ -99,5 +99,13 @@ export class SoilReportBlockwiseService {
   }
 
 
+  async getBlockWiseReport(blockId: string) {
+    return this.reportRepository.find({
+      where: { block: { block_id: blockId } },
+      relations: ['block', 'block.district'],
+      order: { timestamp: 'DESC' }
+    });
+  }
+
    
 }
