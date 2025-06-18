@@ -8,6 +8,8 @@ import { StateModule } from './soil/modules/state.module';
 import { DistrictModule } from './soil/modules/district.module';
 import { SoilReportDistrictwiseModule } from './soil/modules/soil-report-districtwise.module';
 import { SoilReportStatetwiseModule } from './soil/modules/soil-report-statewise.module';
+import { ContactModule } from './soil/modules/contacts.module';
+
 
 @Module({
   imports: [
@@ -23,13 +25,15 @@ import { SoilReportStatetwiseModule } from './soil/modules/soil-report-statewise
       synchronize: true, 
       migrations: [__dirname + '/migrations/*{.ts,.js}'],
     }),
+     
 
     BlockModule,
     SoilReportBlockwiseModule,
     StateModule, 
     DistrictModule,
     SoilReportDistrictwiseModule,
-    SoilReportStatetwiseModule
+    SoilReportStatetwiseModule,
+    ContactModule,
   ],
 })
 export class AppModule {}
