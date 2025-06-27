@@ -33,20 +33,20 @@ export class SoilReportBlockwiseService {
   async findAll() {
     return this.reportRepository.find({ relations: ['block','block.district'] });
   }
+
   async findByBlock(blockId: string) {
     return this.reportRepository.find({
       where: { block: { block_id: blockId } },
       relations: ['block', 'block.district']
     });
   }
+
   async findByDistrict(districtId: string) {
     return this.reportRepository.find({
       where: { block: { district: { district_id: districtId } } },
       relations: ['block', 'block.district']
     });
   }
-
-
 
   async findOne(id: string) {
     return this.reportRepository.findOne({ where: { blockwise_report_id: id }, relations: ['block','block.district'] });
