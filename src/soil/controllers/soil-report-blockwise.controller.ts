@@ -69,7 +69,7 @@ export class SoilReportBlockwiseController {
   @ApiParam({ name: 'id', description: 'Soil report ID' })
   @ApiBody({ type: UpdateSoilReportBlockwiseDto })
   @ApiResponse({ status: 200, description: 'Soil report updated successfully' })
-  update(
+  async update(
     @Param('id') id: string,
     @Body() dto: UpdateSoilReportBlockwiseDto,
   ) {
