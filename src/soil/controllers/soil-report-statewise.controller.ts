@@ -88,3 +88,4 @@ export class SoilReportStatewiseController {
     return this.service.delete(id);
   }
 }
+   
