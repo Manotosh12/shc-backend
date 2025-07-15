@@ -55,7 +55,7 @@ export class DistrictService {
     data: {
       district_name?: string;
       state_id?: string;
-      blocks?: { block_name: string }[]; // You can also extend to include soil reports per block
+      blocks?: { block_name: string }[]; 
     },
   ): Promise<District> {
     const district = await this.findOneDistrict(id);
