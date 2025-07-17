@@ -8,7 +8,7 @@ import { StateModule } from './soil/modules/state.module';
 import { DistrictModule } from './soil/modules/district.module';
 import { SoilReportDistrictwiseModule } from './soil/modules/soil-report-districtwise.module';
 import { SoilReportStatetwiseModule } from './soil/modules/soil-report-statewise.module';
-import { ContactModule } from './soil/modules/contacts.module';
+import { ContactModule } from './soil/modules/contact.module';
 
 
 @Module({
