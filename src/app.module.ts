@@ -10,6 +10,7 @@ import { SoilReportDistrictwiseModule } from './soil/modules/soil-report-distric
 import { SoilReportStatetwiseModule } from './soil/modules/soil-report-statewise.module';
 import { ContactModule } from './soil/modules/contact.module';
 import { AuthModule } from './auth/auth.module';
+import { RecommendationModule } from './recommendation/recommendation.module';
 
 
 
@@ -36,7 +37,8 @@ import { AuthModule } from './auth/auth.module';
     SoilReportDistrictwiseModule,
     SoilReportStatetwiseModule,
     ContactModule,
-    AuthModule
+    AuthModule,
+    RecommendationModule
   ],
 })
 export class AppModule {}
