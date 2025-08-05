@@ -10,6 +10,7 @@ import { SoilReportDistrictwiseModule } from './soil/modules/soil-report-distric
 import { SoilReportStatetwiseModule } from './soil/modules/soil-report-statewise.module';
 import { ContactModule } from './soil/modules/contact.module';
 import { AuthModule } from './auth/auth.module';
+import { WeatherModule } from './weather/weather.module';
 import { RecommendationModule } from './recommendation/recommendation.module';
 
 
@@ -17,6 +18,8 @@ import { RecommendationModule } from './recommendation/recommendation.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    WeatherModule,
+    
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -26,7 +29,12 @@ import { RecommendationModule } from './recommendation/recommendation.module';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: true, 
+      
       migrations: [__dirname + '/migrations/*{.ts,.js}'],
+       ssl: {
+    rejectUnauthorized: false,
+  }
+      
     }),
      
 
