@@ -1,45 +1,57 @@
+// src/auth/auth.controller.spec.ts
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { SignupDto } from './dto/signup.dto';
 
 describe('AuthController', () => {
-  let controller: AuthController;
+  let authController: AuthController;
   let authService: AuthService;
 
+  const mockAuthService = {
+    signup: jest.fn((dto: SignupDto) => {
+      return {
+        message: 'User signed up successfully',
+        userId: 'auth0|testuserid123',
+      };
+    }),
+  };
+
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const moduleRef: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
         {
           provide: AuthService,
-          useValue: {
-            signup: jest.fn(),
-          },
+          useValue: mockAuthService,
         },
       ],
     }).compile();
 
-    controller = module.get<AuthController>(AuthController);
-    authService = module.get<AuthService>(AuthService);
+    authController = moduleRef.get<AuthController>(AuthController);
+    authService = moduleRef.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(authController).toBeDefined();
   });
 
-  describe('signup', () => {
-    it('should call authService.signup with correct params and return result', async () => {
-      const dto = {
+  describe('signup()', () => {
+    it('should call authService.signup() with the correct data and return success response', async () => {
+      const signupDto: SignupDto = {
         email: 'test@example.com',
         password: 'password123',
         name: 'Test User',
-        phone: '1234567890',
+        phone: '9876543210',
       };
-      const result = { id: 1, ...dto };
-      jest.spyOn(authService, 'signup').mockResolvedValue(result as any);
 
-      expect(await controller.signup(dto)).toEqual(result);
-      expect(authService.signup).toHaveBeenCalledWith(dto);
+      const result = await authController.signup(signupDto);
+
+      expect(authService.signup).toHaveBeenCalledWith(signupDto);
+      expect(result).toEqual({
+        message: 'User signed up successfully',
+        userId: 'auth0|testuserid123',
+      });
     });
   });
 });

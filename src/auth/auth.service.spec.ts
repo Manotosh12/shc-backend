@@ -1,98 +1,101 @@
-import { Test, TestingModule } from '@nestjs/testing';
+// src/auth/auth.service.spec.ts
 import { AuthService } from './auth.service';
+import { SignupDto } from './dto/signup.dto';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { InternalServerErrorException } from '@nestjs/common';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('AuthService', () => {
-  let service: AuthService;
+  let authService: AuthService;
   let configService: ConfigService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AuthService,
-        {
-          provide: ConfigService,
-          useValue: {
-            get: jest.fn((key: string) => {
-              const values: Record<string, string> = {
-                AUTH0_DOMAIN: 'test-domain.auth0.com',
-                AUTH0_CLIENT_ID: 'test-client-id',
-                AUTH0_CLIENT_SECRET: 'test-client-secret',
-                AUTH0_CONNECTION: 'Username-Password-Authentication',
-              };
-              return values[key];
-            }),
-          },
-        },
-      ],
-    }).compile();
+  const mockConfigService = {
+    get: jest.fn((key: string) => {
+      const values = {
+        AUTH0_DOMAIN: 'example.auth0.com',
+        AUTH0_CLIENT_ID: 'test-client-id',
+        AUTH0_CLIENT_SECRET: 'test-client-secret',
+        AUTH0_CONNECTION: 'Username-Password-Authentication',
+      };
+      return values[key];
+    }),
+  };
 
-    service = module.get<AuthService>(AuthService);
-    configService = module.get<ConfigService>(ConfigService);
-  });
-
-  afterEach(() => {
+  beforeEach(() => {
+    configService = mockConfigService as unknown as ConfigService;
+    authService = new AuthService(configService);
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  const signupDto: SignupDto = {
+    email: 'test@example.com',
+    password: 'securepass',
+    name: 'John Doe',
+    phone: '9876543210',
+  };
+
+  it('should create user successfully in Auth0', async () => {
+    mockedAxios.post.mockImplementation((url, data) => {
+      if (url.includes('/oauth/token')) {
+        return Promise.resolve({
+          data: { access_token: 'mock-access-token' },
+        });
+      }
+
+      if (url.includes('/api/v2/users')) {
+        return Promise.resolve({ data: { user_id: 'auth0|123' } });
+      }
+
+      return Promise.reject(new Error('Unknown URL'));
+    });
+
+    const result = await authService.signup(signupDto);
+
+    expect(mockedAxios.post).toHaveBeenCalledTimes(2);
+    expect(mockedAxios.post).toHaveBeenCalledWith(
+      expect.stringContaining('/oauth/token'),
+      expect.objectContaining({
+        client_id: 'test-client-id',
+        client_secret: 'test-client-secret',
+      }),
+    );
+
+    expect(mockedAxios.post).toHaveBeenCalledWith(
+      expect.stringContaining('/api/v2/users'),
+      expect.objectContaining({
+        email: signupDto.email,
+        password: signupDto.password,
+        user_metadata: {
+          name: signupDto.name,
+          phone: signupDto.phone,
+        },
+      }),
+      expect.objectContaining({
+        headers: {
+          Authorization: 'Bearer mock-access-token',
+        },
+      }),
+    );
+
+    expect(result).toEqual({ message: 'User created in Auth0' });
   });
 
-  describe('signup', () => {
-    it('should create a user in Auth0 and return a message', async () => {
-      const user = {
-        email: 'test@example.com',
-        password: 'password123',
-        name: 'Test User',
-        phone: '1234567890',
-      };
-
-      // Mock the token response
-      mockedAxios.post.mockResolvedValueOnce({
-        data: { access_token: 'fake-access-token' },
-      });
-
-      // Mock the user creation response
-      mockedAxios.post.mockResolvedValueOnce({ data: {} });
-
-      const result = await service.signup(user);
-
-      expect(mockedAxios.post).toHaveBeenNthCalledWith(
-        1,
-        'https://test-domain.auth0.com/oauth/token',
-        {
-          client_id: 'test-client-id',
-          client_secret: 'test-client-secret',
-          audience: 'https://test-domain.auth0.com/api/v2/',
-          grant_type: 'client_credentials',
-        }
-      );
-
-      expect(mockedAxios.post).toHaveBeenNthCalledWith(
-        2,
-        'https://test-domain.auth0.com/api/v2/users',
-        {
-          email: user.email,
-          password: user.password,
-          connection: 'Username-Password-Authentication',
-          user_metadata: {
-            name: user.name,
-            phone: user.phone,
-          },
+  it('should throw InternalServerErrorException on error', async () => {
+    mockedAxios.post.mockRejectedValueOnce({
+      response: {
+        data: {
+          message: 'Email already exists',
         },
-        {
-          headers: {
-            Authorization: 'Bearer fake-access-token',
-          },
-        }
-      );
-
-      expect(result).toEqual({ message: 'User created in Auth0' });
+      },
     });
+
+    await expect(authService.signup(signupDto)).rejects.toThrow(
+      new InternalServerErrorException('Signup failed: Email already exists'),
+    );
+
+    expect(mockedAxios.post).toHaveBeenCalledTimes(1);
   });
 });
