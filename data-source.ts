@@ -22,4 +22,5 @@ export default new DataSource({
   entities: [State, District, Block, SoilReportStatewise,SoilReportDistrictwise, SoilReportBlockwise, Contact],
   migrations: ['src/migrations/*.ts'],
   migrationsTableName: 'migrations',
+  
 });
