@@ -6,11 +6,14 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // ✅ Enable CORS (important for frontend integration)
-    app.enableCors({
-      origin: [process.env.FRONTEND_URL || 'http://localhost:5173'],
-    });
+  // ✅ Load FRONTEND_URL from env (with fallback)
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
+  // ✅ Enable CORS for frontend integration (Render + local)
+  app.enableCors({
+    origin: [frontendUrl],
+    credentials: true, // required if using cookies or Auth0
+  });
 
   // ✅ Global Validation Pipe
   app.useGlobalPipes(
@@ -21,7 +24,7 @@ async function bootstrap() {
     }),
   );
 
-  // ✅ Swagger Configuration (Optimized for Render)
+  // ✅ Swagger Setup
   const config = new DocumentBuilder()
     .setTitle('SoilXpert API')
     .setDescription('API documentation for the SoilXpert app')
@@ -30,7 +33,6 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-
   SwaggerModule.setup('api-docs', app, document, {
     customSiteTitle: 'SoilXpert API Docs',
     swaggerOptions: {
@@ -42,13 +44,12 @@ async function bootstrap() {
 
   // ✅ Start Server
   const PORT = process.env.PORT || 3000;
-  await app.listen(PORT, '0.0.0.0'); // important for Render
+  await app.listen(PORT, '0.0.0.0'); // Required by Render
 
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📄 Swagger docs at http://localhost:${PORT}/api-docs`);
 }
 
 bootstrap();
-
 
 
