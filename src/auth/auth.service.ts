@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(private config: ConfigService) {}
+  constructor(private config: ConfigService) { }
 
   async signup(user: { email: string; password: string; name: string; phone: string }) {
     const tokenRes = await axios.post(`https://${this.config.get('AUTH0_DOMAIN')}/oauth/token`, {
