@@ -15,7 +15,7 @@ export class BlockController {
   @ApiBody({ type: CreateBlockDto })
   @ApiResponse({ status: 201, description: 'Block created successfully' })
   create(@Body() body: CreateBlockDto) {
-    const { block_name, district_id } = body as any;
+    const { block_name, district_id } = body;
     return this.blockService.createBlock({ block_name, district_id });
   }
 

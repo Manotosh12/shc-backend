@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
 
 export class CreateBlockDto {
 
@@ -7,4 +7,9 @@ export class CreateBlockDto {
   @IsString()
   @IsNotEmpty()
   block_name: string;
+
+  @ApiProperty({ example: 'c3f3f680-1234-4a5b-9e6c-0a1d2e3f4b5c', description: 'UUID of the district' })
+  @IsUUID()
+  @IsNotEmpty()
+  district_id: string;
 }
