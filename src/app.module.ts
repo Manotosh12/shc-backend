@@ -11,15 +11,13 @@ import { SoilReportStatetwiseModule } from './soil/modules/soil-report-statewise
 import { ContactModule } from './soil/modules/contact.module';
 import { AuthModule } from './auth/auth.module';
 import { WeatherModule } from './weather/weather.module';
-import { RecommendationModule } from './recommendation/recommendation.module';
-
-
+import { DirectRecommendationModule } from './recommendation/direct-recommendation.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     WeatherModule,
-    
+
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -27,26 +25,22 @@ import { RecommendationModule } from './recommendation/recommendation.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      autoLoadEntities: true,
-      synchronize: true, 
-      
-      migrations: [__dirname + '/migrations/*{.ts,.js}'],
-       ssl: {
-    rejectUnauthorized: false,
-  }
-      
+      autoLoadEntities: true, // still okay for Nest
+      synchronize: process.env.NODE_ENV !== 'production', // disable in prod
+      ssl: process.env.NODE_ENV === 'production' 
+        ? { rejectUnauthorized: false } 
+        : false, // only enable SSL on Render
     }),
-     
 
     BlockModule,
     SoilReportBlockwiseModule,
-    StateModule, 
+    StateModule,
     DistrictModule,
     SoilReportDistrictwiseModule,
     SoilReportStatetwiseModule,
     ContactModule,
     AuthModule,
-    RecommendationModule
+    DirectRecommendationModule,
   ],
 })
 export class AppModule {}
