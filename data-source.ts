@@ -1,4 +1,3 @@
-// data-source.ts
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { SoilReportStatewise } from 'src/soil/entities/soil-report-statewise';
@@ -8,7 +7,10 @@ import { Block } from 'src/soil/entities/block.entity';
 import { SoilReportBlockwise } from 'src/soil/entities/soil-report-blockwise.entity';
 import { Contact } from 'src/soil/entities/contact.entity';
 import { SoilReportDistrictwise } from 'src/soil/entities/soil-report-districtwise.entity';
+
 dotenv.config();
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 export default new DataSource({
   type: 'postgres',
@@ -17,10 +19,16 @@ export default new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  synchronize: false, // never true in production
-  logging: true,
-  entities: [State, District, Block, SoilReportStatewise,SoilReportDistrictwise, SoilReportBlockwise, Contact],
-  migrations: ['src/migrations/*.ts'],
+  synchronize: false, // always false in production
+  logging: !isProduction,
+  entities: isProduction
+    ? ['dist/**/*.entity.js'] // compiled entities in production
+    : [State, District, Block, SoilReportStatewise, SoilReportDistrictwise, SoilReportBlockwise, Contact],
+  migrations: isProduction
+    ? ['dist/migrations/*.js'] // compiled migrations in production
+    : ['src/migrations/*.ts'],
   migrationsTableName: 'migrations',
-  
+  ssl: isProduction
+    ? { rejectUnauthorized: false } // Render/Postgres needs SSL
+    : false, // local Docker: no SSL
 });
